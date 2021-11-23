@@ -1,6 +1,6 @@
 package guru.sfg.beer.inventory.service.services;
 
-import common.events.NewInventoryEvent;
+import com.comon.brewery.model.events.NewInventoryEvent;
 import guru.sfg.beer.inventory.service.config.JmsConfigConvert;
 import guru.sfg.beer.inventory.service.domain.BeerInventory;
 import guru.sfg.beer.inventory.service.repositories.BeerInventoryRepository;
