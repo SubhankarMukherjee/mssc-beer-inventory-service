@@ -1,8 +1,9 @@
 package guru.sfg.beer.inventory.service.services.allocation;
 
-import com.comon.brewery.model.events.AllocateOrderRequest;
-import com.comon.brewery.model.events.BeerOrderDto;
-import com.comon.brewery.model.events.BeerOrderLineDto;
+import com.comon.brewery.model.event.AllocateOrderRequest;
+import com.comon.brewery.model.event.BeerOrderDto;
+import com.comon.brewery.model.event.BeerOrderLineDto;
+import com.comon.brewery.model.event.DeallocateOrderRequest;
 import guru.sfg.beer.inventory.service.domain.BeerInventory;
 import guru.sfg.beer.inventory.service.repositories.BeerInventoryRepository;
 import lombok.RequiredArgsConstructor;
@@ -39,6 +40,21 @@ public class AllocationServiceImpl implements AllocationService {
         log.debug("Total Ordered: " + totalOrdered.get() + " Total Allocated: " + totalAllocated.get());
 
         return totalOrdered.get() == totalAllocated.get();
+    }
+
+    @Override
+    public void deAllocate_order(DeallocateOrderRequest deallocateOrderRequest) {
+
+        deallocateOrderRequest.getBeerOrderDto().getBeerOrderLines().forEach(line->{
+            BeerInventory beerInventory = BeerInventory.builder().beerId(line.getBeerId())
+                    .upc(line.getUpc())
+                    .quantityOnHand(line.getQuantityAllocated())
+                    .build();
+
+            BeerInventory newInventory = beerInventoryRepository.save(beerInventory);
+            log.debug("Inventory restored from allocated to quantity on hand for UOC"+beerInventory.getUpc()
+            +" with inventory ID:"+ newInventory.getId());
+        });
     }
 
     private void allocateBeerOrderLine(BeerOrderLineDto beerOrderLine) {

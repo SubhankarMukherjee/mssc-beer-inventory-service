@@ -32,5 +32,7 @@ public class BeerInventoryController {
                 .stream()
                 .map(beerInventoryMapper::beerInventoryToBeerInventoryDto)
                 .collect(Collectors.toList());
+
+
     }
 }

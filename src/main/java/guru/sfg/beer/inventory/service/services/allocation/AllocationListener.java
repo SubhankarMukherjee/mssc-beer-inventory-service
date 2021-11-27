@@ -1,8 +1,7 @@
 package guru.sfg.beer.inventory.service.services.allocation;
 
-import com.comon.brewery.model.events.AllocateOrderRequest;
-import com.comon.brewery.model.events.AllocateOrderResult;
-import com.comon.brewery.model.events.BeerOrderDto;
+import com.comon.brewery.model.event.AllocateOrderRequest;
+import com.comon.brewery.model.event.AllocateOrderResult;
 import guru.sfg.beer.inventory.service.config.JmsConfigConvert;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -25,7 +24,9 @@ public class AllocationListener {
         AllocateOrderResult.AllocateOrderResultBuilder builder = AllocateOrderResult.builder();
 
         try {
-            allocateOrderResult = allocate_order ? builder.pendingInventory(false).build() : builder.pendingInventory(true).build();
+            allocateOrderResult = allocate_order
+                    ? builder.pendingInventory(false).allocationError(false).beerOrderDto(allocateOrderRequest.getBeerOrderDto()).build()
+                    : builder.pendingInventory(true).allocationError(false).beerOrderDto(allocateOrderRequest.getBeerOrderDto()).build();
         }
         catch (Exception e)
         {
